@@ -27,8 +27,7 @@
 
         <vue-upload
                 ref="uploader"
-                uploadButton="#filePicker" 
-                
+                uploadButton="#filePicker"  
         ></vue-upload>
     </div>
 </template>
