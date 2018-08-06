@@ -1,7 +1,9 @@
 <template>
     <div class="upload"> 
-        <ul class="ss-album-con-upimg">
-            <li v-for='(item,index) in previewImgList'>
+        <div :id="'filePicker'+uploadType" class="filePicker-btn fl mr10">选择文件</div>
+
+        <ul class="ss-upload-ul fl">
+            <li v-for='(item,index) in previewImgList' :key="index" :id='item.id' :class="{'upload-success': item.isUploadSuccess}">
                 <div id="" class="file-item thumbnail">
                     <img :src='item.url'>
                     <div class="info">{{item.name}}</div>
@@ -53,7 +55,7 @@
                 default: false,
             },
             // 上传按钮ID
-            uploadButton: {
+            uploadType: {
                 type: String,
                 default: '',
             },
@@ -61,7 +63,7 @@
         data() {
             return {
                 uploader: null,
-                previewImgList:[{},{},]
+                previewImgList:[{}]
             };
         },
         mounted() {  
@@ -70,10 +72,10 @@
         methods: {
             initWebUpload() { 
                 this.uploader = WebUploader.create({
-                    auto: false, // 选完文件后，是否自动上传 
-                    server: 'https://xxdyj.fengqianglife.com/pm/attachment/uploadFile.mvc',  // 文件接收服务端
+                    auto: true, // 选完文件后，是否自动上传 
+                    server: 'https://www.easy-mock.com/mock/5a36926874f427476ce83afd/example/upload',  // 文件接收服务端
                     pick: {
-                        id: this.uploadButton,     // 选择文件的按钮
+                        id: '#filePicker'+this.uploadType,     // 选择文件的按钮
                         multiple: this.multiple,   // 是否多文件上传 默认false
                         label: '',
                     },
@@ -108,15 +110,14 @@
 
 
                 // 当有文件被添加进队列的时候，添加到页面预览
-                this.uploader.on('fileQueued', (file) => { 
-                    console.log(file) 
+                this.uploader.on('fileQueued', (file) => {  
                     // 创建缩略图 100 x 100 
                     this.uploader.makeThumb( file, ( error, src )=>{
                         if ( error ) {
                            //$img.replaceWith('<span>不能预览</span>');
                             return;
                         }   
-                        this.previewImgList.push({url:src,name:file.name}) 
+                        this.previewImgList.push({url:src,name:file.name, id:file.id,isUploadSuccess:''}) 
                     }, 100, 100 ); 
                 });
                 // this.uploader.on('uploadStart', (file) => {
@@ -127,25 +128,36 @@
                 // this.uploader.on('uploadProgress', (file, percentage) => {
                 //     this.$emit('progress', file, percentage);
                 // });
-                // this.uploader.on('uploadSuccess', (file, response) => {
-                //     this.$emit('success', file, response);
-                // });
+                this.uploader.on('uploadSuccess', (file, response) => {
+                    
+                    this.previewImgList.map((item,index)=>{
+                        if(item.id==file.id){
+                              item.isUploadSuccess=true;
+                        } 
+                        return item
+                    }) 
+                    this.$emit('success', file, response); //图片上传成功后返回的数据
+                });
                 // this.uploader.on('uploadError', (file, reason) => {
                 //     console.error(reason);
                 //     this.$emit('uploadError', file, reason);
                 // });
-                // this.uploader.on('error', (type) => {
-                //     let errorMessage = '';
-                //     if (type === 'F_EXCEED_SIZE') {
-                //         errorMessage = `文件大小不能超过${this.fileSingleSizeLimit / (1024 * 1000)}M`;
-                //     } else if (type === 'Q_EXCEED_NUM_LIMIT') {
-                //         errorMessage = '文件上传已达到最大上限数';
-                //     } else {
-                //         errorMessage = `上传出错！请检查后重新上传！错误代码${type}`;
-                //     }
-                //     console.error(errorMessage);
-                //     this.$emit('error', errorMessage);
-                // });
+
+                //错误提示
+                this.uploader.on('error', (type) => {
+                    let errorMessage = '';
+                    if (type === 'F_EXCEED_SIZE') {
+                        errorMessage = `文件大小不能超过${this.fileSingleSizeLimit / (1024 * 1000)}M`;
+                    } else if (type === 'Q_EXCEED_NUM_LIMIT') {
+                        errorMessage = '文件上传已达到最大上限数';
+                    } else if(type==='F_DUPLICATE') {
+                        errorMessage = '不能上传同一张';
+                    }  else {
+                        errorMessage = `上传出错！请检查后重新上传！错误代码${type}`;
+                    } 
+                    this.$emit('error', errorMessage);
+                });
+
                 // this.uploader.on('uploadComplete', (file, response) => {
                 //     this.$emit('complete', file, response);
                 // });
@@ -171,10 +183,15 @@
 
 <style  >
     /* 上传图片 */
+*{margin: 0; padding: 0}
+ul li{list-style: none;}
+.fl{float: left;}
+.upload{overflow: hidden;}
 .file-item{position: relative;}
+.filePicker-btn{position: relative; width: 100px; height: 100px; background: rgba(0, 0, 0, .5); z-index: 100}
 .file-item .error{position: absolute;top: 4px;left: 4px;right: 4px;background: red;color: white;text-align: center;height: 20px;font-size: 14px;line-height: 23px;}
 .file-item .info{position: absolute;left: 4px;bottom: 4px;padding-right: 20px;right: 4px;height: 20px;line-height: 20px;text-indent: 5px;background: rgba(0, 0, 0, 0.6);color: white;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;font-size: 12px;z-index: 10;}
-/*.upload-state-done:after{content: '';position: absolute;width: 20px;height: 20px;background: url('../images/scusessicon.png') no-repeat center center;background-size: 20px;right: 4px;bottom: 4px;z-index: 99;}*/
+.upload-success:after{content: '';position: absolute;width: 20px;height: 20px;background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowMjVGNjM3RDQyMDYxMUU4OTgxMDhFQzY0RTNEOEI0MCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDowMjVGNjM3RTQyMDYxMUU4OTgxMDhFQzY0RTNEOEI0MCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjAyNUY2MzdCNDIwNjExRTg5ODEwOEVDNjRFM0Q4QjQwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAyNUY2MzdDNDIwNjExRTg5ODEwOEVDNjRFM0Q4QjQwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+exfjbQAAAMVJREFUeNrs2EEKwjAQBdDGQ3iX7mKpkHojT+DancfotXoAwU1JZzCLIEgzSQYD/oG/TOYtmkyJ8d53Ldeha7wABBBAAAEEEMD/ATrKQrEtAhk3U46UXrSS/weV4ygv/647xUjWN43TBhbjJEDefBA0qYKTAK+h2SOh2VQLJwFayjMBWRUn/QbHHWR1XM4h+YZUweWe4vMH8qKFK7lmYuSqhSu9B2OkCo5jCp8+TmG23nhqagxxg7cZAAEEEEAAAfxpbQIMAMv1X5C1MX1aAAAAAElFTkSuQmCC') no-repeat center center;background-size: 20px;right: 4px;bottom: 4px;z-index: 99;}
 /*.file-item .progress{position: absolute;right: 4px;bottom: 4px;height: 3px;left: 4px;height: 4px;overflow: hidden;z-index: 15;margin: 0;padding: 0;border-radius: 0;background: transparent;}*/
 /*.file-item .progress span{display: block;overflow: hidden;width: 50px;height: 100%;background: rgba(255, 255, 255, .5) url(../images/progress.png) repeat-x;-webit-transition: width 200ms linear;-moz-transition: width 200ms linear;-o-transition: width 200ms linear;-ms-transition: width 200ms linear;transition: width 200ms linear;-webkit-animation: progressmove 2s linear infinite;-moz-animation: progressmove 2s linear infinite;-o-animation: progressmove 2s linear infinite;-ms-animation: progressmove 2s linear infinite;animation: progressmove 2s linear infinite;-webkit-transform: translateZ(0);}*/
 @-webkit-keyframes progressmove{0%{background-position: 0 0;}100%{background-position: 17px 0;}}
@@ -184,7 +201,8 @@
 .webuploader-container label{position: absolute;left: 0;right: 0;top: 0;bottom: 0;width: 100px!important; height: 100px!important;}
 .webuploader-container div{height: 100px;}
 /*.file-item-delet{position: absolute; cursor: pointer; width: 20px;height: 20px; right: -5px; top: -5px;z-index: 20; background: #ff1e1e url('../images/deleticon.png') no-repeat center center; background-size: 20px; border-radius: 100px; }*/
-.ss-album-con-upimg {position: absolute; top: 0; left: 0; z-index: 10}
-.ss-album-con-upimg li{float: left;}
+.ss-upload-ul {position: relative;  z-index: 10}
+.ss-upload-ul li{float: left; position: relative; margin:0 5px;}
+.ss-upload-ul li:first-child{margin-left: 0;}
 
 </style>
