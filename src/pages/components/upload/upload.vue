@@ -1,9 +1,10 @@
 <template>
-    <div class="upload"> 
+    <div class="upload">  
         <div :id="'filePicker'+uploadType" class="filePicker-btn fl mr10">选择文件</div>
 
         <ul class="ss-upload-ul fl">
             <li v-for='(item,index) in previewImgList' :key="index" :id='item.id' :class="{'upload-success': item.isUploadSuccess}">
+ 
                 <div id="" class="file-item thumbnail">
                     <img :src='item.url'>
                     <div class="info">{{item.name}}</div>
@@ -62,8 +63,8 @@
         },
         data() {
             return {
-                uploader: null,
-                previewImgList:[{}]
+                uploader: null, 
+                previewImgList:[] 
             };
         },
         mounted() {  
