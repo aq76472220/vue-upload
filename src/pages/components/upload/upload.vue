@@ -136,7 +136,7 @@
                         } 
                         return item
                     }) 
-                    this.$emit('success', file, response); //图片上传成功后返回的数据
+                    this.$emit('success', file, response ); //图片上传成功后返回的数据
                 });
                 // this.uploader.on('uploadError', (file, reason) => {
                 //     console.error(reason);
