@@ -1,7 +1,7 @@
 <template>
     <div class="upload"> 
         <ul class="ss-album-con-upimg">
-            <li v-for='(item,index) in previewImgList'>
+            <li v-for='(item,index) in previewImgList' :key="index">
                 <div id="" class="file-item thumbnail">
                     <img :src='item.url'>
                     <div class="info">{{item.name}}</div>
@@ -61,7 +61,7 @@
         data() {
             return {
                 uploader: null,
-                previewImgList:[{},{},]
+                previewImgList:[]
             };
         },
         mounted() {  
