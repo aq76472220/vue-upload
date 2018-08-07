@@ -1,7 +1,7 @@
 <template>
     <div class="upload"> 
         <ul class="ss-album-con-upimg">
-            <li v-for='(item,index) in previewImgList'>
+            <li v-for='(item,index) in previewList' :key='index'>
                 <div id="" class="file-item thumbnail">
                     <img :src='item.url'>
                     <div class="info">{{item.name}}</div>
@@ -61,7 +61,7 @@
         data() {
             return {
                 uploader: null,
-                previewImgList:[{},{},]
+                previewList:[{},{}]
             };
         },
         mounted() {  
@@ -116,7 +116,7 @@
                            //$img.replaceWith('<span>不能预览</span>');
                             return;
                         }   
-                        this.previewImgList.push({url:src,name:file.name}) 
+                        this.previewList.push({url:src,name:file.name}) 
                     }, 100, 100 ); 
                 });
                 // this.uploader.on('uploadStart', (file) => {
