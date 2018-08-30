@@ -23,6 +23,7 @@
 
         <vue-upload
                 ref="uploader"
+                url="https://www.easy-mock.com/mock/5a36926874f427476ce83afd/example/upload"
                 uploadType="01"
                 @error="onError"
                 @success="onSuccess"
@@ -112,6 +113,7 @@ export default {
                 //console.log(111)
             },
             onError(mes){// 失败的接口
+                alert(mes)
                 console.log(mes)
             }
         },
