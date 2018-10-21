@@ -1,7 +1,6 @@
 <template>
     <div class="upload-box">  
         <div :id="'filePicker'+uploadType" class="filePicker-btn fl mr10">选择文件</div>
-
         <ul class="ss-upload-ul fl">
             <li v-for='(item,index) in previewImgList' :key="index" :id='item.id' class="file-item" :class="{'upload-success': item.isUploadSuccess}">
                 <div id="" class="file-item thumbnail">

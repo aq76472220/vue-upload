@@ -19,7 +19,7 @@
             </div>
         </div> -->
 
-
+        <p>111</p>
 
         <vue-upload
                 ref="uploader"
@@ -123,8 +123,11 @@ export default {
         }
 }
 </script> 
-<style scoped>
+<style lang = 'scss' scoped>
 
-   
+   $primary-color: red; 
+    p {
+        color: $primary-color;  //编译后就成了 color:#333;类似于js的变量！
+    }
     
 </style>
