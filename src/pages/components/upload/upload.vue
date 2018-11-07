@@ -1,5 +1,7 @@
 <template>
-    <div class="upload-box">
+
+    <div class="upload-box">  
+        <div :id="'filePicker'+uploadType" class="filePicker-btn fl mr10">选择文件</div>
         <ul class="ss-upload-ul fl">
             <li v-for='(item,index) in previewImgList' :key="index" :id='item.id' class="file-item" :class="{'upload-success': item.isUploadSuccess}">
                 <div id="" class="file-item thumbnail">
@@ -176,7 +178,7 @@
     };
 </script>
 
-<style>
+<style scoped >
 .upload-box{overflow: hidden;}
 .file-item{position: relative; border-radius: 10px; overflow: hidden}
 .filePicker-btn{position: relative; border: 2px dashed  #ccc; border-radius: 10px; z-index: 100; background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoyRjIwMDE5NkUyN0UxMUU4ODAyMUI5NjcxQzBCQTE0MCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoyRjIwMDE5N0UyN0UxMUU4ODAyMUI5NjcxQzBCQTE0MCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjJGMjAwMTk0RTI3RTExRTg4MDIxQjk2NzFDMEJBMTQwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjJGMjAwMTk1RTI3RTExRTg4MDIxQjk2NzFDMEJBMTQwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+RebshQAAAHdJREFUeNrs2sEJwCAMBdBYeq/7r+QydYIWoSskBXn/4s3wCF4+tjFGJOf+zp455Iz8XAUz4ohNAgICAgICAgICAgICAgICApKaVQet3qmisnkS755bbaQXbaJ5IyAgICAgICAgICAgICAgICB/p+K/1qyAvAIMAKtLCMzCtuEDAAAAAElFTkSuQmCC") no-repeat center center}
