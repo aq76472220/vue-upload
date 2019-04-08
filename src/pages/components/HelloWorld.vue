@@ -2,7 +2,7 @@
     <div class="page">
 
         <vue-upload
-            ref="uploader"
+            ref="uploader1"
             url="https://rrxc.weihubao.com/broker/backend/photo"
             uploadType="01"
             @error="onError"
@@ -11,6 +11,8 @@
             :height="180"
             :fileNumLimit="10"
         ></vue-upload>
+
+        <div class="ss-hammer"></div>
     </div>
 </template>
 
@@ -41,5 +43,5 @@ export default {
 }
 </script> 
 <style  scoped>
-
+  .ss-hammer{width: 100px; height: 100px; background: #eee;}
 </style>

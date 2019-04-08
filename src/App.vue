@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import vueUpload from './pages/components/upload/upload'
+
 
 export default {
   name: 'App',
